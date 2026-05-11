@@ -278,16 +278,10 @@ void MainWindow::on_pb_sort_clicked()
 void MainWindow::on_pb_sOrT_clicked()
 {
     curent_flag = !curent_flag;
-    auto sort = [](std::string a, std::string b){
-        for (char &ch : a){
-            ch = std::tolower(ch);
-        }
-        for (char &ch : b){
-            ch = std::tolower(ch);
-        }
-        return a < b;
+    static const auto compare_ci = [](const std::string& l, const std::string& r) {
+        return QString::compare(QString::fromStdString(l), QString::fromStdString(r), Qt::CaseInsensitive) < 0;
     };
-    deque_model_.items = MergeSort(deque_model_.items, sort);
+    deque_model_.items = MergeSort(deque_model_.items, compare_ci);
     deque_model_.iterator = deque_model_.items.begin();
     ApplyModel();
     ApplyIterator();
